@@ -3,25 +3,25 @@ const cors = require("cors");
 const path = require("path");
 
 const gpsRoutes = require("./routes/gps");
-const relatorioRoutes = require("./routes/relatorio");
+const reportRoutes = require("./routes/report");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos HTML da pasta public
+// Serve HTML files from the public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Rotas da API
+// API routes
 app.use("/api/gps", gpsRoutes);
-app.use("/api/relatorio", relatorioRoutes);
+app.use("/api/report", reportRoutes);
 
-// Rota principal
+// Root route
 app.get("/", (req, res) => {
-  res.send("Servidor da Frota está rodando ✅");
+  res.send("Fleet server is running ✅");
 });
 
 app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+  console.log("Server running on port 3000");
 });
