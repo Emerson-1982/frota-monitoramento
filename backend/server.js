@@ -10,14 +10,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 👉 SERVIR OS ARQUIVOS HTML
+// Servir arquivos HTML da pasta public
 app.use(express.static(path.join(__dirname, "public")));
 
-// 👉 ROTAS DA API
+// Rotas da API
 app.use("/api/gps", gpsRoutes);
 app.use("/api/relatorio", relatorioRoutes);
 
-// 👉 ROTA PRINCIPAL
+// Rota principal
 app.get("/", (req, res) => {
   res.send("Servidor da Frota está rodando ✅");
 });
