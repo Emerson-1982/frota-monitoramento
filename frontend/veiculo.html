@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<body>
+<h3>Rastreamento Frota</h3>
+<input id="veiculo" placeholder="CAM-01">
+<button onclick="start()">Iniciar</button>
+<p id="info"></p>
+
+<script>
+let last = null, parada = null;
+
+function start() {
+  setInterval(track, 15000);
+}
+
+function track() {
+  navigator.geolocation.getCurrentPosition(p => {
+    const lat = p.coords.latitude;
+    const lon = p.coords.longitude;
+    const now = new Date();
+
+    let status = "MOVIMENTO";
+    if (last) {
+      const d = distance(last.lat, last.lon, lat, lon);
+      if (d < 10) {
+        if (!parada) parada = now;
+        if ((now - parada) / 60000 >= 5) status = "PARADO";
+      } else parada = null;
+    }
+
+    last = { lat, lon };
+    document.getElementById("info").innerText = status;
+
+    fetch("/api/gps", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        veiculo: document.getElementById("veiculo").value,
+        latitude: lat,
+        longitude: lon,
+        status,
+        data: now
+      })
+    });
+  });
+}
+
+function distance(a,b,c,d){
+  const R=6371e3,r=Math.PI/180;
+  const x=Math.sin((c-a)*r/2)**2+
+    Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;
+  return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+</script>
+</body>
+</html>
