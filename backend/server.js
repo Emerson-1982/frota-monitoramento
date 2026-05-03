@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // 👉 SERVIR OS ARQUIVOS HTML
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // 👉 ROTAS DA API
 app.use("/api/gps", gpsRoutes);
